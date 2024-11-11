@@ -23,6 +23,10 @@
       }
     ]
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kodmanyagha/copyright-fixer.git"
+  },
   "scripts": {
     "vscode:prepublish": "yarn run package",
     "compile": "webpack",
