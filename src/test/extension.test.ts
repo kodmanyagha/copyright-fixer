@@ -1,3 +1,8 @@
+/**
+ * Copyright (c) {companyName} - All Rights Reserved
+ * Written by {authorName} <{authorEmail}>, {startYear}-{currentYear}
+ */
+
 import * as assert from "assert";
 
 // You can import and use all API from the 'vscode' module

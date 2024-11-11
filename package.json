@@ -15,7 +15,7 @@
     "commands": [
       {
         "command": "copyright-fixer.fix",
-        "title": "Fix copyright"
+        "title": "Fix copyright blocks"
       },
       {
         "command": "copyright-fixer.show-problems",

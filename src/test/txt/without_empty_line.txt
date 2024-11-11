@@ -1,0 +1,7 @@
+/**
+ * Copyright (c) Trillion Dollar Company LTD. STI. - All Rights Reserved
+ * Written by John Doe <john@doe.com>, 1989-2024
+ */
+"foo";
+"bar";
+"baz";
