@@ -1,12 +1,7 @@
-/**
- * Copyright (c) {companyName} - All Rights Reserved
- * Written by {authorName} <{authorEmail}>, {startYear}-{currentYear}
- */
-
 import fs from "fs";
 import path from "path";
 import * as vscode from "vscode";
-import { PROJECT_PATH } from "../../extension";
+import { getProjectPath } from "../utils";
 
 export type ConfigType = {
   template: string;
@@ -19,14 +14,15 @@ export type ConfigType = {
 
 export function readConfig(context: vscode.ExtensionContext): ConfigType {
   let config: ConfigType = defaultConfig();
+  const projectPath = getProjectPath();
 
-  config = readFrom(path.join(PROJECT_PATH, ".vscode/copyright-fixer.json"), config);
-  config = readFrom(path.join(PROJECT_PATH, "copyright-fixer.json"), config);
+  config = readFrom(path.join(projectPath, ".vscode/copyright-fixer.json"), config);
+  config = readFrom(path.join(projectPath, "copyright-fixer.json"), config);
 
   return config;
 }
 
-function defaultConfig(): ConfigType {
+export function defaultConfig(): ConfigType {
   return {
     template: `/**
  * Copyright (c) {companyName} - All Rights Reserved

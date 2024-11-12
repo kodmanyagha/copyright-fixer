@@ -2,9 +2,6 @@ import * as vscode from "vscode";
 import { cmdFix } from "./services/copyright-fixer";
 import { cmdShowProblems } from "./services/show-problems";
 
-let workspaceFolders = vscode.workspace.workspaceFolders ?? [];
-export const PROJECT_PATH = workspaceFolders[0].uri.fsPath;
-
 export function activate(context: vscode.ExtensionContext) {
   vscode.window.showInformationMessage("Copyright Fixer extension activated.");
 

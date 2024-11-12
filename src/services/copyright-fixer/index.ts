@@ -1,14 +1,9 @@
-/**
- * Copyright (c) {companyName} - All Rights Reserved
- * Written by {authorName} <{authorEmail}>, {startYear}-{currentYear}
- */
-
 import fs from "fs";
 import path from "path";
 import * as vscode from "vscode";
 
-import { PROJECT_PATH } from "../../extension";
 import { ConfigType, readConfig } from "../config-service";
+import { getProjectPath } from "../utils";
 
 export const cmdFix = async (context: vscode.ExtensionContext) => {
   const config: ConfigType = readConfig(context);
@@ -32,7 +27,7 @@ async function startFixDeeply(context: vscode.ExtensionContext, config: ConfigTy
   let allFolders: string[] = [];
 
   includedFolders.forEach((startPath) => {
-    startPath = path.join(PROJECT_PATH, startPath);
+    startPath = path.join(getProjectPath(), startPath);
     allFolders.push(startPath);
     allFolders = allFolders.concat(getAllDirectories(startPath));
   });
@@ -92,7 +87,7 @@ function getAllDirectories(folder: string): string[] {
   return directories;
 }
 
-function createCopyrightText(config: ConfigType) {
+export function createCopyrightText(config: ConfigType) {
   let copyrightText = config.template;
   let templateVars = config.templateVars;
   let keys = Object.keys(templateVars);
@@ -129,8 +124,11 @@ function fixCopyrightInContent(config: ConfigType, content: string): string {
 
   /**
    * Algorithm:
-   * - Find all copyright blocks which stays after first line and remove them.
-   * - If there isn't copyright text on top of file then add it.
+   * - If any copyright block exist:
+   *     - If this block is similar to fresh copyright text then cut this block and put
+   *       it to top of the file. Add new line instead of its old place.
+   *     - If this isn't similar than put fresh copyright text to on top of the file.
+   * - If no copyright block exist in the file then create a new one and put to top.
    */
 
   // TODO Handle copyright
@@ -147,24 +145,46 @@ function fixCopyrightInContent(config: ConfigType, content: string): string {
   return content;
 }
 
-function stringSimilarity(str1: string, str2: string, caseSensitive: boolean = false) {
+export function getCommentBlockIndices(
+  content: string,
+  startPoint: number = 0,
+  commentStart: string = "/*",
+  commentEnd: string = "*/"
+): [number, number] | null {
+  let foundStartIndice = content.indexOf(commentStart, startPoint);
+  if (foundStartIndice < 0) {
+    return null;
+  }
+
+  let foundEndIndice = content.indexOf(commentEnd, foundStartIndice + commentStart.length);
+  if (foundEndIndice < 0) {
+    return null;
+  }
+  foundEndIndice += commentEnd.length;
+
+  return [foundStartIndice, foundEndIndice];
+}
+
+export function stringSimilarity(str1: string, str2: string, caseSensitive: boolean = false) {
   if (!caseSensitive) {
     str1 = str1.toLowerCase();
     str2 = str2.toLowerCase();
   }
   const substringLength: number = 2;
 
-  if (str1.length < substringLength || str2.length < substringLength) return 0;
+  if (str1.length < substringLength || str2.length < substringLength) {
+    return 0;
+  }
 
   const map = new Map();
   for (let i = 0; i < str1.length - (substringLength - 1); i++) {
-    const substr1 = str1.substr(i, substringLength);
+    const substr1 = str1.substring(i, i + substringLength);
     map.set(substr1, map.has(substr1) ? map.get(substr1) + 1 : 1);
   }
 
   let match = 0;
   for (let j = 0; j < str2.length - (substringLength - 1); j++) {
-    const substr2 = str2.substr(j, substringLength);
+    const substr2 = str2.substring(j, j + substringLength);
     const count = map.has(substr2) ? map.get(substr2) : 0;
     if (count > 0) {
       map.set(substr2, count - 1);

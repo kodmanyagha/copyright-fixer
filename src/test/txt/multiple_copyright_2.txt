@@ -18,3 +18,19 @@ function exampleFn2() {
   let foo = "foo";
   console.log(foo);
 }
+/*
+ * Copyright (c) Trillion Dollar Company LTD. STI. - All Rights Reserved
+ * Written by John Doe <john@doe.com>, 1989-2024
+ */
+function exampleFn3() {
+  let foo = "foo";
+  console.log(foo);
+}
+/*
+* Copyright (c) Trillion Dollar Company LTD. STI. - All Rights Reserved
+* Written by John Doe <john@doe.com>, 1989-2024
+*/
+function exampleFn4() {
+  let foo = "foo";
+  console.log(foo);
+}
