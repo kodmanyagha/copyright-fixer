@@ -10,6 +10,7 @@
   "categories": [
     "Other"
   ],
+  "icon": "assets/copyright.png",
   "activationEvents": [],
   "main": "./dist/extension.js",
   "contributes": {
@@ -17,10 +18,6 @@
       {
         "command": "copyright-fixer.fix",
         "title": "Fix copyright blocks"
-      },
-      {
-        "command": "copyright-fixer.show-problems",
-        "title": "Show copyright problems"
       }
     ]
   },
