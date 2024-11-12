@@ -16,6 +16,25 @@ These files will be apply sequentially.
 - `.vscode/copyright-fixer.json`
 - `copyright-fixer.json`
 
+Example content:
+
+```json
+{
+  "template": "/**\n * Copyright (c) {companyName} - All Rights Reserved\n * Written by {authorName} <{authorEmail}>, {startYear}-{currentYear}\n */",
+  "templateVars": {
+    "companyName": "Trillion Dollar Company LTD. STI.",
+    "authorName": "John Doe",
+    "authorEmail": "john@doe.com",
+    "startYear": 1989,
+    "currentYear": 2024
+  },
+  "afterNewLine": 2,
+  "foundSimilarityMinRate": 0.9,
+  "includedExtensions": ["rs", "ts", "js", "tsx", "jsx"],
+  "includedFolders": ["src"]
+}
+```
+
 ## Known Issues
 
 - [ ] Find sliding down copyright texts.
