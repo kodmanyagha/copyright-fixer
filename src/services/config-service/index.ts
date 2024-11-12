@@ -7,6 +7,7 @@ export type ConfigType = {
   template: string;
   templateVars: Record<string, string | boolean | number>;
   afterNewLine: number;
+  foundSimilarityMinRate: number;
   includedFolders: string[];
   includedExtensions: string[];
   excludedFolders: string[];
@@ -36,6 +37,7 @@ export function defaultConfig(): ConfigType {
       currentYear: 2024,
     },
     afterNewLine: 2,
+    foundSimilarityMinRate: 0.9,
     includedExtensions: ["rs", "ts", "js", "tsx", "jsx"],
     includedFolders: ["src"],
     excludedFolders: ["target", "node_modules", "dist", ".vscode"],

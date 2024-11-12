@@ -1,11 +1,11 @@
 import * as assert from "assert";
 import fs from "fs";
 import path from "path";
-import { getCommentBlockIndices, stringSimilarity } from "../services/copyright-fixer";
+import { findCommentBlockIndices, stringSimilarity } from "../services/copyright-fixer";
 
 suite("Extension Test Suite", () => {
   test("Find copyright block in text", async () => {
-    const copyrightText = `/**
+    const originalCopyrightText = `/**
  * Copyright (c) Trillion Dollar Company LTD. STI. - All Rights Reserved
  * Written by John Doe <john@doe.com>, 1989-2024
  */`;
@@ -14,26 +14,35 @@ suite("Extension Test Suite", () => {
       .readFileSync(path.join(process.cwd(), "src/test/txt/multiple_copyright_2.txt"))
       .toString("utf8");
 
+    const expectedValues = [
+      { indice: [46, 175], minSimilarityRate: 1 },
+      { indice: [221, 346], minSimilarityRate: 0.95 },
+      { indice: [402, 421], minSimilarityRate: 0.24 },
+      { indice: [488, 616], minSimilarityRate: 0.99 },
+      { indice: [682, 807], minSimilarityRate: 0.96 },
+    ];
+
     let startPoint = 0;
     let foundCopyrightText = "";
-    while (true) {
-      let foundIndices = getCommentBlockIndices(haystack, startPoint);
+    for (var i = 0; i < 10; i++) {
+      let foundIndices = findCommentBlockIndices(haystack, startPoint);
       if (foundIndices === null) {
         break;
       }
 
       foundCopyrightText = haystack.substring(foundIndices[0], foundIndices[1]);
-      let similarity = stringSimilarity(copyrightText, foundCopyrightText);
+      let similarity = stringSimilarity(originalCopyrightText, foundCopyrightText);
 
-      console.log("--------------------------------------------");
-      console.log(">> Found indices:", foundIndices);
-      console.log(">> Found copyright text:", foundCopyrightText);
-      console.log(">> similarity:", similarity);
+      // console.log("--------------------------------------------");
+      // console.log(">> Found indices:", foundIndices);
+      // console.log(">> Found copyright text:", foundCopyrightText);
+      // console.log(">> similarity:", similarity);
+
+      assert.strictEqual(similarity >= expectedValues[i].minSimilarityRate, true);
+      assert.strictEqual(expectedValues[i].indice[0], foundIndices[0]);
+      assert.strictEqual(expectedValues[i].indice[1], foundIndices[1]);
 
       startPoint = foundIndices[1];
     }
-
-    assert.strictEqual(-1, [1, 2, 3].indexOf(5));
-    assert.strictEqual(-1, [1, 2, 3].indexOf(0));
   });
 });

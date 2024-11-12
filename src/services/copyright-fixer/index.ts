@@ -117,7 +117,7 @@ function getPathItems(folder: string, recursive: boolean): string[] {
   return [];
 }
 
-function fixCopyrightInContent(config: ConfigType, content: string): string {
+export function fixCopyrightInContent(config: ConfigType, content: string): string {
   const originalCopyrightText = createCopyrightText(config);
   const fileLineSeparator = detectLineSeparator(content);
   const emptyLines = fileLineSeparator.repeat(config.afterNewLine);
@@ -131,26 +131,57 @@ function fixCopyrightInContent(config: ConfigType, content: string): string {
    * - If no copyright block exist in the file then create a new one and put to top.
    */
 
-  // TODO Handle copyright
-  if (!content.startsWith("/*")) {
+  let copyrightBlockIndices: FoundIndicesType = null;
+  let startPoint = 0;
+  let foundCopyrightText = "";
+  while (true) {
+    copyrightBlockIndices = findCommentBlockIndices(content, startPoint);
+    if (copyrightBlockIndices === null) {
+      break;
+    }
+
+    foundCopyrightText = content.substring(copyrightBlockIndices[0], copyrightBlockIndices[1]);
+    let similarity = stringSimilarity(originalCopyrightText, foundCopyrightText);
+    if (similarity >= config.foundSimilarityMinRate) {
+      break;
+    }
+
+    startPoint = copyrightBlockIndices[1];
+  }
+
+  if (copyrightBlockIndices === null) {
     // No copyright added yet, we must add it
     content = originalCopyrightText + emptyLines + content;
   } else {
-    // Copyright exist, update it with current dates and add empty line to end.
-    const codeSection = content.substring(content.indexOf("*/") + 2).trimStart();
+    let beforeContent = content.substring(0, copyrightBlockIndices[0]);
+    let afterContent = content.substring(copyrightBlockIndices[1]);
 
-    content = content.substring(0, content.indexOf("*/") + 2) + emptyLines + codeSection;
+    // This copyright block already on top of the file. Then fix the next lines.
+    if (beforeContent.length === 0) {
+      afterContent = afterContent.trimStart();
+
+      content = foundCopyrightText + emptyLines + afterContent;
+    } else {
+      let replacement =
+        beforeContent.endsWith(fileLineSeparator) || afterContent.startsWith(fileLineSeparator)
+          ? ""
+          : fileLineSeparator;
+
+      content = foundCopyrightText + emptyLines + beforeContent + replacement + afterContent;
+    }
   }
 
   return content;
 }
 
-export function getCommentBlockIndices(
+export type FoundIndicesType = [number, number] | null;
+
+export function findCommentBlockIndices(
   content: string,
   startPoint: number = 0,
   commentStart: string = "/*",
   commentEnd: string = "*/"
-): [number, number] | null {
+): FoundIndicesType {
   let foundStartIndice = content.indexOf(commentStart, startPoint);
   if (foundStartIndice < 0) {
     return null;
