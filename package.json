@@ -2,7 +2,7 @@
   "name": "copyright-fixer",
   "displayName": "Copyright Fixer - Fix copyright issue in your source files.",
   "description": "",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "publisher": "emirbugra",
   "engines": {
     "vscode": "^1.94.0"
