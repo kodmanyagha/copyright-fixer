@@ -7,10 +7,10 @@ import { getProjectPath } from "../utils";
 
 export const cmdFix = async (context: vscode.ExtensionContext) => {
   const config: ConfigType = readConfig(context);
-  console.log(config);
+  // console.log(config);
 
   try {
-    vscode.window.showInformationMessage("Starting to fix copyright text.");
+    // vscode.window.showInformationMessage("Starting to fix copyright text.");
     await startFixDeeply(context, config);
     vscode.window.showInformationMessage("Copyright fix success.");
   } catch (e) {
@@ -40,6 +40,7 @@ async function startFixDeeply(context: vscode.ExtensionContext, config: ConfigTy
     currentPathItems.forEach((item) => {
       const currentPathItem = path.join(currentFullPath, item);
       console.log("currentPathItem:", currentPathItem);
+
       const stats = fs.statSync(currentPathItem);
       if (!stats.isFile()) {
         return;
@@ -101,8 +102,8 @@ export function createCopyrightText(config: ConfigType) {
 }
 
 function detectLineSeparator(content: string) {
-  if (content.indexOf("\n\r") >= 0) {
-    return "\n\r";
+  if (content.indexOf("\r\n") >= 0) {
+    return "\r\n";
   } else {
     return "\n";
   }

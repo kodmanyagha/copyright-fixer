@@ -2,6 +2,7 @@ import * as assert from "assert";
 import fs from "fs";
 import path from "path";
 import { findCommentBlockIndices, stringSimilarity } from "../services/copyright-fixer";
+import { delCarriageReturn, getExtensionPath } from "./test-utils";
 
 suite("Extension Test Suite", () => {
   test("Find copyright block in text", async () => {
@@ -10,9 +11,11 @@ suite("Extension Test Suite", () => {
  * Written by John Doe <john@doe.com>, 1989-2024
  */`;
 
-    let haystack = fs
-      .readFileSync(path.join(process.cwd(), "src/test/txt/multiple_copyright_2.txt"))
-      .toString("utf8");
+    let haystack = delCarriageReturn(
+      fs
+        .readFileSync(path.join(getExtensionPath(), "src/test/txt/multiple_copyright_2.txt"))
+        .toString("utf8")
+    );
 
     const expectedValues = [
       { indice: [46, 175], minSimilarityRate: 1 },

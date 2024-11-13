@@ -3,12 +3,13 @@ import fs from "fs";
 import path from "path";
 import { defaultConfig } from "../services/config-service";
 import { findCommentBlockIndices, fixCopyrightInContent } from "../services/copyright-fixer";
+import { delCarriageReturn, getExtensionPath } from "./test-utils";
 
 suite("Extension Test Suite", () => {
   test("Find copyright block and move to head 1", async () => {
     const config = defaultConfig();
     let content = fs
-      .readFileSync(path.join(process.cwd(), "src/test/txt/import_on_top.txt"))
+      .readFileSync(path.join(getExtensionPath(), "src/test/txt/import_on_top.txt"))
       .toString("utf8");
 
     const fixedContent = fixCopyrightInContent(config, content);
@@ -31,13 +32,13 @@ function exampleFn() {
 }
 `;
 
-    assert.strictEqual(fixedContent, expectedContent);
+    assert.strictEqual(delCarriageReturn(fixedContent), expectedContent);
   });
 
   test("Find copyright block and move to head 2", async () => {
     const config = defaultConfig();
     let content = fs
-      .readFileSync(path.join(process.cwd(), "src/test/txt/multiple_copyright_2.txt"))
+      .readFileSync(path.join(getExtensionPath(), "src/test/txt/multiple_copyright_2.txt"))
       .toString("utf8");
 
     const fixedContent = fixCopyrightInContent(config, content);
@@ -50,7 +51,7 @@ function exampleFn() {
   test("Fix empty line", async () => {
     const config = defaultConfig();
     let content = fs
-      .readFileSync(path.join(process.cwd(), "src/test/txt/without_empty_line.txt"))
+      .readFileSync(path.join(getExtensionPath(), "src/test/txt/without_empty_line.txt"))
       .toString("utf8");
 
     const fixedContent = fixCopyrightInContent(config, content);
@@ -67,6 +68,6 @@ function exampleFn() {
 "baz";
 `;
 
-    assert.strictEqual(fixedContent, expectedContent);
+    assert.strictEqual(delCarriageReturn(fixedContent), expectedContent);
   });
 });
