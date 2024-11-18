@@ -3,7 +3,7 @@ import path from "path";
 import * as vscode from "vscode";
 
 import { ConfigType, readConfig } from "../config-service";
-import { getProjectPath } from "../utils";
+import { fixNbsp, getProjectPath } from "../utils";
 
 export const cmdFix = async (context: vscode.ExtensionContext) => {
   const config: ConfigType = readConfig(context);
@@ -101,12 +101,20 @@ export function createCopyrightText(config: ConfigType) {
   return copyrightText;
 }
 
-function detectLineSeparator(content: string) {
-  if (content.indexOf("\r\n") >= 0) {
+export function detectLineSeparator(content: string) {
+  if (content.indexOf("\r\n") >= 0 || content.indexOf("\n\r") >= 0) {
     return "\r\n";
   } else {
     return "\n";
   }
+}
+
+export function updateLineSeparator(content: string, targetLineSeparator: string): string {
+  content = content.replaceAll("\n\r", "\n");
+  content = content.replaceAll("\r\n", "\n");
+  content = content.replaceAll("\n", targetLineSeparator);
+
+  return content;
 }
 
 function getPathItems(folder: string, recursive: boolean): string[] {
@@ -202,6 +210,11 @@ export function stringSimilarity(str1: string, str2: string, caseSensitive: bool
     str1 = str1.toLowerCase();
     str2 = str2.toLowerCase();
   }
+
+  // Fix all whitespaces.
+  str1 = updateLineSeparator(fixNbsp(str1).replace(/\s{2,}/g, " "), " ");
+  str2 = updateLineSeparator(fixNbsp(str2).replace(/\s{2,}/g, " "), " ");
+
   const substringLength: number = 2;
 
   if (str1.length < substringLength || str2.length < substringLength) {
