@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import * as vscode from "vscode";
-import { getProjectPath } from "../utils";
+import { getProjectPath } from "../../utils/file-utils";
 
 export type ConfigType = {
   template: string;
@@ -11,6 +11,8 @@ export type ConfigType = {
   includedFolders: string[];
   includedExtensions: string[];
   excludedFolders: string[];
+  preCmd: string[];
+  postCmd: string[];
 };
 
 export function readConfig(context: vscode.ExtensionContext): ConfigType {
@@ -41,6 +43,8 @@ export function defaultConfig(): ConfigType {
     includedExtensions: ["rs", "ts", "js", "tsx", "jsx"],
     includedFolders: ["src"],
     excludedFolders: ["target", "node_modules", "dist", ".vscode"],
+    preCmd: [],
+    postCmd: [],
   };
 }
 

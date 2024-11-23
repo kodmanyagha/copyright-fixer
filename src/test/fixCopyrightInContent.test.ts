@@ -1,20 +1,15 @@
 import * as assert from "assert";
-import fs from "fs";
-import path from "path";
-import { defaultConfig } from "../services/config-service";
-import { findCommentBlockIndices, fixCopyrightInContent } from "../services/copyright-fixer";
-import { delCarriageReturn, getExtensionPath } from "./test-utils";
+import { defaultConfig } from "../commands/config-service";
+import { fixCopyrightInContent } from "../commands/copyright-fixer";
+import { findCommentBlockIndices } from "../utils/text-utils";
+import { delCarriageReturn, getContent } from "./test-utils";
 
 suite("Extension Test Suite", () => {
   test("Find copyright block and move to head 1", async () => {
     const config = defaultConfig();
-    let content = fs
-      .readFileSync(path.join(getExtensionPath(), "src/test/txt/import_on_top.txt"))
-      .toString("utf8");
+    let content = getContent("src/test/txt/import_on_top.txt");
 
     const fixedContent = fixCopyrightInContent(config, content);
-    // console.log(">>>>>>>> fixedContent");
-    // console.log(fixedContent);
 
     let expectedContent = `/**
  * Copyright (c) Trillion Dollar Company LTD. STI. - All Rights Reserved
@@ -23,7 +18,6 @@ suite("Extension Test Suite", () => {
 
 import fs from "fs";
 import path from "path";
-
 import foo from "foo";
 import bar from "bar";
 
@@ -37,9 +31,7 @@ function exampleFn() {
 
   test("Find copyright block and move to head 2", async () => {
     const config = defaultConfig();
-    let content = fs
-      .readFileSync(path.join(getExtensionPath(), "src/test/txt/multiple_copyright_2.txt"))
-      .toString("utf8");
+    let content = getContent("src/test/txt/multiple_copyright_2.txt");
 
     const fixedContent = fixCopyrightInContent(config, content);
     let copyrightBlockIndices = findCommentBlockIndices(fixedContent);
@@ -50,13 +42,9 @@ function exampleFn() {
 
   test("Fix empty line", async () => {
     const config = defaultConfig();
-    let content = fs
-      .readFileSync(path.join(getExtensionPath(), "src/test/txt/without_empty_line.txt"))
-      .toString("utf8");
+    let content = getContent("src/test/txt/without_empty_line.txt");
 
     const fixedContent = fixCopyrightInContent(config, content);
-    // console.log(">>>>>>>> fixedContent");
-    // console.log(fixedContent);
 
     let expectedContent = `/**
  * Copyright (c) Trillion Dollar Company LTD. STI. - All Rights Reserved
@@ -66,6 +54,49 @@ function exampleFn() {
 "foo";
 "bar";
 "baz";
+`;
+
+    assert.strictEqual(delCarriageReturn(fixedContent), expectedContent);
+  });
+
+  test("Fix empty line started 1", async () => {
+    const config = defaultConfig();
+    let content = getContent("src/test/txt/empty_line_started_1.txt");
+
+    const fixedContent = fixCopyrightInContent(config, content);
+
+    let expectedContent = `/*
+ * Copyright (c) Trillion Dollar Company LTD. STI. - All Rights Reserved
+ * Written by John Doe <john@doe.com>, 1989-2024
+ */
+
+/* This is example rust file. */
+fn main() {
+    println!("Hello world");
+}
+`;
+
+    assert.strictEqual(delCarriageReturn(fixedContent), expectedContent);
+  });
+
+  test("Fix empty line started 2", async () => {
+    const config = defaultConfig();
+    let content = getContent("src/test/txt/empty_line_started_2.txt");
+
+    const fixedContent = fixCopyrightInContent(config, content);
+
+    let expectedContent = `/*
+ * Copyright (c) Trillion Dollar Company LTD. STI. - All Rights Reserved
+ * Written by John Doe <john@doe.com>, 1989-2024
+ */
+
+/* This is example rust file. */
+fn main() {
+    println!("Hello world");
+}
+fn foo_bar_baz() {
+    println!("Hello world");
+}
 `;
 
     assert.strictEqual(delCarriageReturn(fixedContent), expectedContent);

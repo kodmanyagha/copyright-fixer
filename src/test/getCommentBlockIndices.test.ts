@@ -1,7 +1,7 @@
 import * as assert from "assert";
 import fs from "fs";
 import path from "path";
-import { findCommentBlockIndices, stringSimilarity } from "../services/copyright-fixer";
+import { findCommentBlockIndices, stringSimilarity } from "../utils/text-utils";
 import { delCarriageReturn, getExtensionPath } from "./test-utils";
 
 suite("Extension Test Suite", () => {

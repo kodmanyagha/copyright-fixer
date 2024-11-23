@@ -1,0 +1,12 @@
+
+
+
+/* This is example rust file. */
+fn main() {
+    println!("Hello world");
+}
+
+/*
+ * Copyright (c) Trillion Dollar Company LTD. STI. - All Rights Reserved
+ * Written by John Doe <john@doe.com>, 1989-2024
+ */

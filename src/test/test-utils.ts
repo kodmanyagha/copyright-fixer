@@ -1,3 +1,4 @@
+import fs from "fs";
 import path from "path";
 
 export function getExtensionPath(): string {
@@ -16,4 +17,8 @@ export function getExtensionPath(): string {
  */
 export function delCarriageReturn(input: string): string {
   return input.replaceAll("\r", "");
+}
+
+export function getContent(filePath: string): string {
+  return fs.readFileSync(path.join(getExtensionPath(), filePath)).toString("utf8");
 }

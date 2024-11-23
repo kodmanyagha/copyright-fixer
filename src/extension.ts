@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { cmdFix } from "./services/copyright-fixer";
+import { cmdFix } from "./commands/copyright-fixer";
 
 export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(

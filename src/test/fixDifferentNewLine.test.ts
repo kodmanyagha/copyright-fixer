@@ -1,5 +1,5 @@
 import * as assert from "assert";
-import { updateLineSeparator } from "../services/copyright-fixer";
+import { updateLineSeparator } from "../utils/text-utils";
 import { delCarriageReturn } from "./test-utils";
 
 suite("Extension Test Suite", () => {
