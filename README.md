@@ -29,9 +29,10 @@ Example content:
     "currentYear": 2024
   },
   "afterNewLine": 2,
-  "foundSimilarityMinRate": 0.9,
+  "foundSimilarityMinRate": 0.8,
   "includedExtensions": ["rs", "ts", "js", "tsx", "jsx"],
-  "includedFolders": ["src"]
+  "includedFolders": ["src"],
+  "preCmd": ["cargo fmt"]
 }
 ```
 
@@ -66,5 +67,10 @@ You can check implemented features by versioning.
 - Read config files.
 - Adding copyright text to each file if there isn't text on top of it.
 - Fix empty lines after the copyright block.
+
+### 0.2.0
+
+- Execute command before & after copyright fix.
+- Improved copyright block find feature.
 
 **Enjoy!**
