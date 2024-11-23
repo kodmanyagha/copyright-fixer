@@ -11,7 +11,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 - Adding copyright text to each file if there isn't text on top of it.
 - Fix empty lines after the copyright block.
 
-## [0.2.0]
+## [0.3.0]
 
 - Execute command before & after copyright fix.
 - Improved copyright block find feature.
