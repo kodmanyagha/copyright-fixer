@@ -6,6 +6,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [0.1.1]
 
+- Initial release
 - Read config files.
 - Adding copyright text to each file if there isn't text on top of it.
 - Fix empty lines after the copyright block.
@@ -14,5 +15,3 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 - Execute command before & after copyright fix.
 - Improved copyright block find feature.
-
-- Initial release
